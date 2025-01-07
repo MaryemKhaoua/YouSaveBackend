@@ -1,0 +1,97 @@
+classDiagram
+    class User {
+        <<abstract>>
+        +int id
+        +String firstName
+        +String lastName
+        +String email
+        +String password
+        +String bloodType
+        +String city
+        +String phoneNumber
+        +Date registrationDate
+        +register()
+        +login()
+        +updateProfile()
+    }
+
+    class Donor {
+        +Date lastDonationDate
+        +Boolean isEligible
+        +List<Donation> donationHistory
+        +checkEligibility()
+        +viewDonationHistory()
+        +updateAvailability()
+    }
+
+    class Receiver {
+        +String medicalNeed
+        +int requiredBloodUnits
+        +searchDonors()
+        +requestBlood()
+        +trackBloodRequest()
+    }
+
+    class Hospital {
+        +int id
+        +String name
+        +String address
+        +String contactEmail
+        +String contactPhone
+        +searchAvailableDonors()
+        +sendBloodRequest()
+        +updateBloodInventory()
+    }
+
+    class Donation {
+        +int id
+        +Date donationDate
+        +String bloodType
+        +int bloodUnits
+        +String status
+        +recordDonation()
+        +validateDonation()
+    }
+
+    class Notification {
+        +int id
+        +String type
+        +String message
+        +Date createdAt
+        +boolean isRead
+        +sendNotification()
+        +markAsRead()
+    }
+
+    class EligibilityCriteria {
+        +int minAge
+        +int maxAge
+        +double minWeight
+        +List<String> medicalExclusions
+        +checkCriteria()
+        +updateCriteria()
+    }
+
+    class LanguagePreference {
+        +String languageCode
+        +String languageName
+        +changeLanguage()
+        +getLocalizedContent()
+    }
+
+    class AuthenticationService {
+        +authenticateUser()
+        +generateJWTToken()
+        +validateToken()
+        +manageUserRoles()
+    }
+
+    User <|-- Donor
+    User <|-- Receiver
+    Donor "1" -- "*" Donation : makes
+    Hospital "1" -- "*" Donation : receives
+    User "1" -- "*" Notification : gets
+    Hospital "1" -- "*" Notification : sends
+    Donor "*" -- "1" EligibilityCriteria : follows
+    User "1" -- "1" LanguagePreference : has
+    AuthenticationService -- User : manages
