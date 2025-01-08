@@ -1,9 +1,13 @@
 package com.example.yousavebackend.DTOs;
 
+import com.example.yousavebackend.entities.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.Collection;
 
 @Data
 @AllArgsConstructor
@@ -11,9 +15,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RegisterRequestDTO {
     
-    public String firstname;
-    public String lastname;
-    public String email;
-    public String password;
-    public String phone;
+   private String firstname;
+   private String lastname;
+   private String email;
+   private String password;
+   private String phone;
+   public LocalDate DateOfBirth;
+   private Collection<String> roles;
 }
