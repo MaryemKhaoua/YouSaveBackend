@@ -29,6 +29,7 @@ public class AurhController {
 
     @PostMapping("/auth/login")
     public JwtResponseDTO AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO){
+        System.out.println("rah dkhelt");
         Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(),
@@ -43,6 +44,7 @@ public class AurhController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequestDTO registerRequestDTO) throws Exception {
+        System.out.println("rah dkhelt");
         return ResponseEntity.ok (userService.register (registerRequestDTO));
     }
 }

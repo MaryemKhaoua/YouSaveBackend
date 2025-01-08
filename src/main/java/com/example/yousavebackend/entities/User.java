@@ -1,116 +1,47 @@
 package com.example.yousavebackend.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-    public User() {
-    }
-
-    public User(Long id, String firstname, String lastname, String email, String password, String phone, LocalDate dateOfBirth) {
-        this.id = id;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        DateOfBirth = dateOfBirth;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String firstname;
     private String lastname;
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
     private String phone;
-    private LocalDate DateOfBirth;
+    private LocalDate dateOfBirth;
+    private boolean eligible;
 
-    @ManyToMany
-    private Collection<Role> Roles = new ArrayList<Role>();
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private City city;
 
-    public Collection<Role> getRoles() {
-        return Roles;
-    }
+    @ManyToOne
+    @JoinColumn(name = "blood_type_id")
+    private BloodType bloodType;
 
-    public void setRoles(Role roles) {
-        Roles.add(roles);
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return DateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        DateOfBirth = dateOfBirth;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", phone='" + phone + '\'' +
-                ", DateOfBirth=" + DateOfBirth +
-                '}';
-    }
+    @ManyToOne
+    @JoinColumn(name = "eligibility_criteria_id")
+    private EligibilityCriteria eligibilityCriteria;
 }
