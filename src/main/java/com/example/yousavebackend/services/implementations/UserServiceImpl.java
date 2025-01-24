@@ -1,64 +1,66 @@
 package com.example.yousavebackend.services.implementations;
 
 import com.example.yousavebackend.DTOs.RegisterRequestDTO;
-import com.example.yousavebackend.entities.Role;
-import com.example.yousavebackend.entities.User;
-import com.example.yousavebackend.repositories.RoleRepository;
-import com.example.yousavebackend.repositories.UserRepository;
+import com.example.yousavebackend.DTOs.User.UserRequestDTO;
+import com.example.yousavebackend.DTOs.User.UserResponseDTO;
+import com.example.yousavebackend.entities.*;
+import com.example.yousavebackend.repositories.*;
 import com.example.yousavebackend.services.IUserService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Component
+@Service
 public class UserServiceImpl implements IUserService {
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
+
+    @Autowired
+    private BloodTypeRepository bloodTypeRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User register(RegisterRequestDTO registerRequestDTO) throws Exception {
+        if (userRepository.findByEmail(registerRequestDTO.getEmail()).isPresent()) {
+            throw new Exception("User already exists with email " + registerRequestDTO.getEmail());
+        }
+
         User user = new User();
-
-        if (registerRequestDTO.getFirstname() == null || registerRequestDTO.getFirstname().isEmpty()) {
-            throw new Exception("Firstname null or empty");
-        }
-        if (registerRequestDTO.getLastname() == null || registerRequestDTO.getLastname().isEmpty()) {
-            throw new Exception("Lastname null or empty");
-        }
-        if (registerRequestDTO.getEmail() == null || registerRequestDTO.getEmail().isEmpty()) {
-            throw new Exception("Email null or empty");
-        }
-        if (registerRequestDTO.getPassword() == null || registerRequestDTO.getPassword().isEmpty()) {
-            throw new Exception("Password null or empty");
-        }
-
         user.setFirstname(registerRequestDTO.getFirstname());
         user.setLastname(registerRequestDTO.getLastname());
         user.setEmail(registerRequestDTO.getEmail());
-        user.setDateOfBirth(registerRequestDTO.getDateOfBirth());
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
         user.setPhone(registerRequestDTO.getPhone());
+        user.setDateOfBirth(registerRequestDTO.getDateOfBirth());
 
-        Collection<Role> roles = new ArrayList<>();
-        if (registerRequestDTO.getRoles() != null && !registerRequestDTO.getRoles().isEmpty()) {
-            for (String roleName : registerRequestDTO.getRoles()) {
-                Role role = getRoleByName(roleName);
-                if (role == null) {
-                    throw new Exception("Role " + roleName + " not found");
-                }
-                roles.add(role);
-            }
-        } else {
-            roles.add(getRoleByName("USER"));
+        City city = cityRepository.findById(registerRequestDTO.getCityId())
+                .orElseThrow(() -> new Exception("City not found with id " + registerRequestDTO.getCityId()));
+        user.setCity(city);
+
+        BloodType bloodType = bloodTypeRepository.findById(registerRequestDTO.getBloodTypeId())
+                .orElseThrow(() -> new Exception("BloodType not found with id " + registerRequestDTO.getBloodTypeId()));
+        user.setBloodType(bloodType);
+
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : registerRequestDTO.getRoles()) {
+            Role role = roleRepository.findByName(roleName)
+                    .orElseThrow(() -> new Exception("Role not found with name " + roleName));
+            roles.add(role);
         }
         user.setRoles(roles);
 
@@ -67,6 +69,107 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Role getRoleByName(String role_name) {
-        return this.roleRepository.getRoleByName(role_name);
+        return roleRepository.findByName(role_name).orElse(null);
+    }
+
+    @Override
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<UserResponseDTO> getUserById(Long id) {
+        return userRepository.findById(id).map(this::mapToDTO);
+    }
+
+    @Override
+    public UserResponseDTO saveUser(UserRequestDTO userRequestDTO) throws Exception {
+        if (userRepository.findByEmail(userRequestDTO.getEmail()).isPresent()) {
+            throw new Exception("User already exists with email " + userRequestDTO.getEmail());
+        }
+
+        User user = new User();
+        user.setFirstname(userRequestDTO.getFirstname());
+        user.setLastname(userRequestDTO.getLastname());
+        user.setEmail(userRequestDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        user.setPhone(userRequestDTO.getPhone());
+        user.setDateOfBirth(userRequestDTO.getDateOfBirth());
+
+        City city = cityRepository.findById(userRequestDTO.getCityId())
+                .orElseThrow(() -> new Exception("City not found with id " + userRequestDTO.getCityId()));
+        user.setCity(city);
+
+        BloodType bloodType = bloodTypeRepository.findById(userRequestDTO.getBloodTypeId())
+                .orElseThrow(() -> new Exception("BloodType not found with id " + userRequestDTO.getBloodTypeId()));
+        user.setBloodType(bloodType);
+
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : userRequestDTO.getRoles()) {
+            Role role = roleRepository.findByName(roleName)
+                    .orElseThrow(() -> new Exception("Role not found with name " + roleName));
+            roles.add(role);
+        }
+        user.setRoles(roles);
+
+        User savedUser = userRepository.save(user);
+        return mapToDTO(savedUser);
+    }
+
+    @Override
+    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) throws Exception {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User not found with id " + id));
+
+        user.setFirstname(userRequestDTO.getFirstname());
+        user.setLastname(userRequestDTO.getLastname());
+        user.setEmail(userRequestDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
+        user.setPhone(userRequestDTO.getPhone());
+        user.setDateOfBirth(userRequestDTO.getDateOfBirth());
+
+        City city = cityRepository.findById(userRequestDTO.getCityId())
+                .orElseThrow(() -> new Exception("City not found with id " + userRequestDTO.getCityId()));
+        user.setCity(city);
+
+        BloodType bloodType = bloodTypeRepository.findById(userRequestDTO.getBloodTypeId())
+                .orElseThrow(() -> new Exception("BloodType not found with id " + userRequestDTO.getBloodTypeId()));
+        user.setBloodType(bloodType);
+
+        Set<Role> roles = new HashSet<>();
+        for (String roleName : userRequestDTO.getRoles()) {
+            Role role = roleRepository.findByName(roleName)
+                    .orElseThrow(() -> new Exception("Role not found with name " + roleName));
+            roles.add(role);
+        }
+        user.setRoles(roles);
+
+        User updatedUser = userRepository.save(user);
+        return mapToDTO(updatedUser);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("User not found with id " + id);
+        }
+    }
+
+    private UserResponseDTO mapToDTO(User user) {
+        UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.setId(user.getId());
+        userResponseDTO.setFirstname(user.getFirstname());
+        userResponseDTO.setLastname(user.getLastname());
+        userResponseDTO.setEmail(user.getEmail());
+        userResponseDTO.setPhone(user.getPhone());
+        userResponseDTO.setDateOfBirth(user.getDateOfBirth());
+        userResponseDTO.setCityName(user.getCity().getName());
+        userResponseDTO.setBloodTypeName(user.getBloodType().getType());
+        userResponseDTO.setRoles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
+        return userResponseDTO;
     }
 }
