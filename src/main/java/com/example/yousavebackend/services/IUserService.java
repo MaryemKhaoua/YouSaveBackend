@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 public interface IUserService {
-    User register(RegisterRequestDTO registerRequestDTO) throws Exception;
+    UserResponseDTO register(RegisterRequestDTO registerRequestDTO) throws Exception;
     Role getRoleByName(String role_name);
     List<UserResponseDTO> getAllUsers();
     Optional<UserResponseDTO> getUserById(Long id);

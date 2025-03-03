@@ -8,6 +8,7 @@ import java.util.List;
 @Entity
 @Table(name = "cities")
 @Data
+@ToString(exclude = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 public class City {

@@ -35,7 +35,7 @@ public class UserServiceImpl implements IUserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User register(RegisterRequestDTO registerRequestDTO) throws Exception {
+    public UserResponseDTO register(RegisterRequestDTO registerRequestDTO) throws Exception {
         if (userRepository.findByEmail(registerRequestDTO.getEmail()).isPresent()) {
             throw new Exception("User already exists with email " + registerRequestDTO.getEmail());
         }
@@ -64,7 +64,8 @@ public class UserServiceImpl implements IUserService {
         }
         user.setRoles(roles);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return mapToDTO(savedUser);
     }
 
     @Override
