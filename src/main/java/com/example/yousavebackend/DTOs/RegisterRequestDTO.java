@@ -15,5 +15,5 @@ public class RegisterRequestDTO {
    private LocalDate dateOfBirth;
    private Long cityId;
    private Long bloodTypeId;
-   private Set<String> roles;
+//   private Set<String> roles;
 }

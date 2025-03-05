@@ -4,6 +4,7 @@ import com.example.yousavebackend.DTOs.User.UserRequestDTO;
 import com.example.yousavebackend.DTOs.User.UserResponseDTO;
 import com.example.yousavebackend.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +15,18 @@ import java.util.List;
 public class UserController {
 
     @Autowired
+    @Qualifier("userServiceImpl")
     private IUserService userService;
 
     @GetMapping
     public List<UserResponseDTO> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getUserCount() {
+        long userCount = userService.countAllUsers();
+        return ResponseEntity.ok(userCount);
     }
 
     @GetMapping("/{id}")

@@ -56,13 +56,9 @@ public class UserServiceImpl implements IUserService {
                 .orElseThrow(() -> new Exception("BloodType not found with id " + registerRequestDTO.getBloodTypeId()));
         user.setBloodType(bloodType);
 
-        Set<Role> roles = new HashSet<>();
-        for (String roleName : registerRequestDTO.getRoles()) {
-            Role role = roleRepository.findByName(roleName)
-                    .orElseThrow(() -> new Exception("Role not found with name " + roleName));
-            roles.add(role);
-        }
-        user.setRoles(roles);
+        Role donorRole = roleRepository.findByName("DONOR")
+                .orElseThrow(() -> new Exception("Role 'DONOR' not found in database"));
+        user.setRoles(Set.of(donorRole));
 
         User savedUser = userRepository.save(user);
         return mapToDTO(savedUser);
@@ -70,6 +66,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Role getRoleByName(String role_name) {
+
         return roleRepository.findByName(role_name).orElse(null);
     }
 
@@ -78,6 +75,10 @@ public class UserServiceImpl implements IUserService {
         return userRepository.findAll().stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
+    }
+    @Override
+    public long countAllUsers() {
+        return userRepository.count();
     }
 
     @Override
