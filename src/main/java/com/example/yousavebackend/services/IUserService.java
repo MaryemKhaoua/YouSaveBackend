@@ -20,4 +20,5 @@ public interface IUserService {
     UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) throws Exception;
     void deleteUser(Long id);
     long countAllUsers();
+    Optional<User> findByEmail(String email);
 }

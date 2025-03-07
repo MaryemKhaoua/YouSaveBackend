@@ -161,6 +161,11 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     private UserResponseDTO mapToDTO(User user) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
         userResponseDTO.setId(user.getId());
