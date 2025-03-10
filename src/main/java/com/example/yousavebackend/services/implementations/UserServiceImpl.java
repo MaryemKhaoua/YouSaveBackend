@@ -55,6 +55,10 @@ public class UserServiceImpl implements IUserService {
 
         BloodType bloodType = bloodTypeRepository.findById(registerRequestDTO.getBloodTypeId())
                 .orElseThrow(() -> new Exception("BloodType not found with id " + registerRequestDTO.getBloodTypeId()));
+
+        bloodType.incrementUserCount();
+        bloodTypeRepository.save(bloodType);
+
         user.setBloodType(bloodType);
 
         Role donorRole = roleRepository.findByName("DONOR")
