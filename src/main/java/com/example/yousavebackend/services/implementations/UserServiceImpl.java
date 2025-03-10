@@ -43,6 +43,7 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user.setFirstname(registerRequestDTO.getFirstname());
         user.setLastname(registerRequestDTO.getLastname());
+        user.setGender(registerRequestDTO.getGender());
         user.setEmail(registerRequestDTO.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
         user.setPhone(registerRequestDTO.getPhone());
@@ -95,6 +96,7 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user.setFirstname(userRequestDTO.getFirstname());
         user.setLastname(userRequestDTO.getLastname());
+        user.setGender(userRequestDTO.getGender());
         user.setEmail(userRequestDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         user.setPhone(userRequestDTO.getPhone());
@@ -127,6 +129,7 @@ public class UserServiceImpl implements IUserService {
 
         user.setFirstname(userRequestDTO.getFirstname());
         user.setLastname(userRequestDTO.getLastname());
+        user.setGender(userRequestDTO.getGender());
         user.setEmail(userRequestDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         user.setPhone(userRequestDTO.getPhone());
@@ -171,6 +174,7 @@ public class UserServiceImpl implements IUserService {
         userResponseDTO.setId(user.getId());
         userResponseDTO.setFirstname(user.getFirstname());
         userResponseDTO.setLastname(user.getLastname());
+        userResponseDTO.setGender(user.getGender());
         userResponseDTO.setEmail(user.getEmail());
         userResponseDTO.setPhone(user.getPhone());
         userResponseDTO.setDateOfBirth(user.getDateOfBirth());
