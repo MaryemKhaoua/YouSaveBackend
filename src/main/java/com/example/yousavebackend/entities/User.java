@@ -43,7 +43,4 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "eligibility_criteria_id")
-    private EligibilityCriteria eligibilityCriteria;
 }
