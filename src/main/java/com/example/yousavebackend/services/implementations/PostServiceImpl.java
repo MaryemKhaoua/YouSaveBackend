@@ -68,6 +68,7 @@ public class PostServiceImpl implements IPostService {
         return mapToDTO(savedPost);
     }
 
+
     @Override
     public PostResponseDTO updatePost(Long id, PostResponseDTO postRequestDTO) {
         Post existingPost = postRepository.findById(id)
