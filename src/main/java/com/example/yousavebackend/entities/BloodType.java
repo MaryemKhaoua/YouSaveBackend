@@ -21,9 +21,9 @@ public class BloodType {
     @OneToMany(mappedBy = "bloodType")
     private List<User> users;
 
-    public void incrementDonationCount(int amount) {
-        this.donationCount += amount;
-    }
+//    public void incrementDonationCount(int amount) {
+//        this.donationCount += amount;
+//    }
 
     public void incrementUserCount() {
         this.userCount++;
