@@ -1,0 +1,264 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1742217584101-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_blood_types
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: donation_count
+                  type: INT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_count
+                  type: INT
+            tableName: blood_types
+  - changeSet:
+      id: 1742217584101-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_cities
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: cities
+  - changeSet:
+      id: 1742217584101-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_comments
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: comment
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: post_id
+                  type: BIGINT
+            tableName: comments
+  - changeSet:
+      id: 1742217584101-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_posts
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: content
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: user_id
+                  type: BIGINT
+            tableName: posts
+  - changeSet:
+      id: 1742217584101-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_role
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: role
+  - changeSet:
+      id: 1742217584101-6
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_user_roles
+                  name: role_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_user_roles
+                  name: user_id
+                  type: BIGINT
+            tableName: user_roles
+  - changeSet:
+      id: 1742217584101-7
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_users
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: firstname
+                  type: VARCHAR(255)
+              - column:
+                  name: lastname
+                  type: VARCHAR(255)
+              - column:
+                  name: gender
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: phone
+                  type: VARCHAR(255)
+              - column:
+                  name: date_of_birth
+                  type: DATE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: eligible
+                  type: BOOLEAN
+              - column:
+                  name: city_id
+                  type: BIGINT
+              - column:
+                  name: blood_type_id
+                  type: BIGINT
+            tableName: users
+  - changeSet:
+      id: 1742217584101-8
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: uc_users_email
+            tableName: users
+  - changeSet:
+      id: 1742217584101-9
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: post_id
+            baseTableName: comments
+            constraintName: FK_COMMENTS_ON_POST
+            referencedColumnNames: id
+            referencedTableName: posts
+  - changeSet:
+      id: 1742217584101-10
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: posts
+            constraintName: FK_POSTS_ON_USER
+            referencedColumnNames: id
+            referencedTableName: users
+  - changeSet:
+      id: 1742217584101-11
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: blood_type_id
+            baseTableName: users
+            constraintName: FK_USERS_ON_BLOOD_TYPE
+            referencedColumnNames: id
+            referencedTableName: blood_types
+  - changeSet:
+      id: 1742217584101-12
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: city_id
+            baseTableName: users
+            constraintName: FK_USERS_ON_CITY
+            referencedColumnNames: id
+            referencedTableName: cities
+  - changeSet:
+      id: 1742217584101-13
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: user_roles
+            constraintName: fk_userol_on_role
+            referencedColumnNames: id
+            referencedTableName: role
+  - changeSet:
+      id: 1742217584101-14
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_roles
+            constraintName: fk_userol_on_user
+            referencedColumnNames: id
+            referencedTableName: users
+

@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Data
-@ToString(exclude = {"city", "bloodType", "roles", "eligibilityCriteria"})
+@ToString(exclude = {"city", "bloodType", "roles", "posts"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -43,7 +43,6 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "eligibility_criteria_id")
-    private EligibilityCriteria eligibilityCriteria;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Post> posts = new HashSet<>();
 }
