@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(("api/posts/all")).permitAll()
                         .requestMatchers("/api/posts/**").authenticated()
 
+                                .requestMatchers("/api/comments/**").authenticated()
+
 //                        .requestMatchers("/api/users/count").permitAll() // Allow access to this endpoint
 //                        .requestMatchers("/api/dashboard/stats").permitAll() // Allow access to this endpoint
 //                        .requestMatchers("/admin/**").hasRole("ADMIN")
