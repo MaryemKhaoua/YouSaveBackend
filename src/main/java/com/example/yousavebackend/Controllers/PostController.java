@@ -14,13 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/posts")
 public class PostController {
 
     @Autowired
     private IPostService postService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<PostResponseDTO>> getAllPosts() {
         List<PostResponseDTO> posts = postService.getAllPosts();
         return new ResponseEntity<>(posts, HttpStatus.OK);
