@@ -1,5 +1,6 @@
 package com.example.yousavebackend.Controllers;
 
+import com.example.yousavebackend.DTOs.Post.PostRequestDTO;
 import com.example.yousavebackend.DTOs.Post.PostResponseDTO;
 import com.example.yousavebackend.exceptions.PostAlreadyExistsException;
 import com.example.yousavebackend.exceptions.PostNotFoundException;
@@ -35,7 +36,7 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostResponseDTO> createPost(@Valid @RequestBody PostResponseDTO postRequestDTO) {
+    public ResponseEntity<PostResponseDTO> createPost(@Valid @RequestBody PostRequestDTO postRequestDTO) {
         try {
             PostResponseDTO createdPost = postService.savePost(postRequestDTO);
             return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
@@ -45,7 +46,7 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponseDTO> updatePost(@PathVariable Long id, @RequestBody PostResponseDTO postRequestDTO) {
+    public ResponseEntity<PostResponseDTO> updatePost(@PathVariable Long id, @Valid @RequestBody PostRequestDTO postRequestDTO) {
         PostResponseDTO updatedPost = postService.updatePost(id, postRequestDTO);
         return new ResponseEntity<>(updatedPost, HttpStatus.OK);
     }
@@ -56,4 +57,3 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-
