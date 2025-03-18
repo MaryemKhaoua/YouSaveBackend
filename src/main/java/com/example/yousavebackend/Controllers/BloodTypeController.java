@@ -18,7 +18,7 @@ public class BloodTypeController {
     @Qualifier("bloodTypeServiceImpl")
     private IBloodTypeService bloodTypeService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<BloodTypeResponseDTO> getAllBloodTypes() {
         return bloodTypeService.getAllBloodTypes();
     }

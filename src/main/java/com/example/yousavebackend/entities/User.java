@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Data
-@ToString(exclude = {"city", "bloodType", "roles", "eligibilityCriteria"})
+@ToString(exclude = {"city", "bloodType", "roles", "posts"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -42,5 +42,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Post> posts = new HashSet<>();
 
 }
