@@ -1,5 +1,6 @@
 package com.example.yousavebackend.services.implementations;
 
+import com.example.yousavebackend.DTOs.Post.PostRequestDTO;
 import com.example.yousavebackend.DTOs.Post.PostResponseDTO;
 import com.example.yousavebackend.entities.Post;
 import com.example.yousavebackend.entities.User;
@@ -40,7 +41,7 @@ public class PostServiceImpl implements IPostService {
     }
 
     @Override
-    public PostResponseDTO savePost(PostResponseDTO postRequestDTO) {
+    public PostResponseDTO savePost(PostRequestDTO postRequestDTO) {
         if (postRequestDTO.getContent() == null || postRequestDTO.getContent().trim().isEmpty()) {
             throw new IllegalArgumentException("Post content cannot be null or empty.");
         }
@@ -68,8 +69,9 @@ public class PostServiceImpl implements IPostService {
         return mapToDTO(savedPost);
     }
 
+
     @Override
-    public PostResponseDTO updatePost(Long id, PostResponseDTO postRequestDTO) {
+    public PostResponseDTO updatePost(Long id, PostRequestDTO postRequestDTO) {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with ID: " + id));
 
