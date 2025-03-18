@@ -61,13 +61,12 @@ public class PostServiceImpl implements IPostService {
 
         Post post = new Post();
         post.setContent(postRequestDTO.getContent());
-        post.setUser(user);
+        post.setUser(user);  // Set the user who created the post
 
         Post savedPost = postRepository.save(post);
 
         return mapToDTO(savedPost);
     }
-
 
     @Override
     public PostResponseDTO updatePost(Long id, PostResponseDTO postRequestDTO) {
@@ -91,6 +90,9 @@ public class PostServiceImpl implements IPostService {
     private PostResponseDTO mapToDTO(Post post) {
         PostResponseDTO dto = new PostResponseDTO();
         dto.setContent(post.getContent());
+        User user = post.getUser();
+        String fullName = user.getFirstname() + " " + user.getLastname();
+        dto.setCreatedBy(fullName);
         return dto;
     }
 }

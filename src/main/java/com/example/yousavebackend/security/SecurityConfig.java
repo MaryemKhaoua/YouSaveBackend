@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -45,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(("api/blood-types/**")).hasRole("ADMIN")
 
                         .requestMatchers(("api/posts/all")).permitAll()
-                        .requestMatchers(("api/posts/**")).authenticated()
+                        .requestMatchers("/api/posts/**").authenticated()
 
 //                        .requestMatchers("/api/users/count").permitAll() // Allow access to this endpoint
 //                        .requestMatchers("/api/dashboard/stats").permitAll() // Allow access to this endpoint
@@ -61,6 +62,10 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    public CorsFilter corsFilter() {
+        return new CorsFilter(request -> new org.springframework.web.cors.CorsConfiguration().applyPermitDefaultValues());
     }
 
     @Bean

@@ -9,5 +9,6 @@ public class PostResponseDTO {
 
     @NotBlank(message = "Content cannot be blank")
     private String content;
+    private String createdBy;
 
 }

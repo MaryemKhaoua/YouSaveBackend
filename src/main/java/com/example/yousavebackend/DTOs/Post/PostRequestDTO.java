@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class PostRequestDTO {
     private String content;
+    private String createdBy;
 }
