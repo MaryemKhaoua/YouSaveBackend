@@ -61,7 +61,7 @@ public class PostServiceImpl implements IPostService {
 
         Post post = new Post();
         post.setContent(postRequestDTO.getContent());
-        post.setUser(user);  // Set the user who created the post
+        post.setUser(user);
 
         Post savedPost = postRepository.save(post);
 
@@ -89,6 +89,7 @@ public class PostServiceImpl implements IPostService {
 
     private PostResponseDTO mapToDTO(Post post) {
         PostResponseDTO dto = new PostResponseDTO();
+        dto.setId(post.getId());
         dto.setContent(post.getContent());
         User user = post.getUser();
         String fullName = user.getFirstname() + " " + user.getLastname();
