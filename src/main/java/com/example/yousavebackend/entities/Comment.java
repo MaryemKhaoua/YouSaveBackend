@@ -17,6 +17,10 @@ public class Comment {
     private String comment;
 
     @ManyToOne
+    @JoinColumn(name = "created_by", nullable = false)
+    private User createdBy;
+
+    @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 }

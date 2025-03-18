@@ -5,12 +5,13 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Data
-@ToString(exclude = {"city", "bloodType", "roles", "posts"})
+@ToString(exclude = {"city", "bloodType", "roles", "posts", "comments"})
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -46,5 +47,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Post> posts = new HashSet<>();
+
+    @OneToMany(mappedBy = "createdBy")
+    private List<Comment> comments;
 
 }
