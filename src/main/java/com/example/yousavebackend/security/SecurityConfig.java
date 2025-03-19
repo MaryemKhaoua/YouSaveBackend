@@ -18,12 +18,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+
     @Autowired
     JwtAuthFilter jwtAuthFilter;
 
@@ -36,26 +39,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-
                         .requestMatchers("/api/cities/all").permitAll()
                         .requestMatchers("/api/cities/**").hasRole("ADMIN")
 
-                        .requestMatchers(("api/blood-types/all")).permitAll()
-                        .requestMatchers(("api/blood-types/**")).hasRole("ADMIN")
-
-                        .requestMatchers(("api/posts/all")).permitAll()
+                        .requestMatchers("/api/posts/all").permitAll()
                         .requestMatchers("/api/posts/**").authenticated()
 
-                                .requestMatchers("/api/comments/**").authenticated()
-
-//                        .requestMatchers("/api/users/count").permitAll() // Allow access to this endpoint
-//                        .requestMatchers("/api/dashboard/stats").permitAll() // Allow access to this endpoint
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/user/**").hasRole("USER")
-//                        .requestMatchers("/donor/**").hasRole("DONOR")
-//                        .requestMatchers("/receiver/**").hasRole("RECEIVER")
+                        .requestMatchers("/api/comments/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
@@ -66,8 +59,17 @@ public class SecurityConfig {
                 .build();
     }
 
-    public CorsFilter corsFilter() {
-        return new CorsFilter(request -> new org.springframework.web.cors.CorsConfiguration().applyPermitDefaultValues());
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("http://localhost:4200");  // Angular app URL
+        configuration.addAllowedMethod("*");  // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+        configuration.addAllowedHeader("*");  // Allow all headers
+        configuration.setAllowCredentials(true);  // Important for cookies and authentication headers
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);  // Apply this to all endpoints
+        return source;
     }
 
     @Bean
