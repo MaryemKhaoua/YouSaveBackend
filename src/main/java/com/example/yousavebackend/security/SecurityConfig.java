@@ -41,15 +41,23 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
+
                         .requestMatchers("/api/cities/all").permitAll()
-                        .requestMatchers("/api/cities/**").hasRole("ADMIN")
+                        .requestMatchers("/api/cities/**").hasAuthority("ADMIN")
 
-                        .requestMatchers("/api/posts/all").permitAll()
-                        .requestMatchers("/api/posts/**").authenticated()
+                        .requestMatchers("/api/blood-types/all").permitAll()
+                        .requestMatchers("/api/blood-types/**").hasAuthority("ADMIN")
 
-                        .requestMatchers("/api/comments/**").permitAll()
-                        .anyRequest().authenticated()
+
+                                .requestMatchers("/api/posts/all").permitAll()
+                                .requestMatchers("/api/posts/**").authenticated()
+
+                                .requestMatchers("/api/comments/all").permitAll()
+                                .requestMatchers("/api/comments/**").authenticated()
+
+                                .requestMatchers("api/users/basic-info").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -62,13 +70,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:4200");  // Angular app URL
-        configuration.addAllowedMethod("*");  // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
-        configuration.addAllowedHeader("*");  // Allow all headers
-        configuration.setAllowCredentials(true);  // Important for cookies and authentication headers
+        configuration.addAllowedOrigin("http://localhost:4200");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);  // Apply this to all endpoints
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 

@@ -1,5 +1,6 @@
 package com.example.yousavebackend.Controllers;
 
+import com.example.yousavebackend.DTOs.User.UserBasicInfoDTO;
 import com.example.yousavebackend.DTOs.User.UserRequestDTO;
 import com.example.yousavebackend.DTOs.User.UserResponseDTO;
 import com.example.yousavebackend.services.IUserService;
@@ -56,6 +57,11 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/basic-info")
+    public List<UserBasicInfoDTO> getAllUsersBasicInfo() {
+        return userService.getAllUsersBasicInfo();
     }
 
     @DeleteMapping("/{id}")
