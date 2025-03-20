@@ -1,6 +1,7 @@
 package com.example.yousavebackend.services;
 
 import com.example.yousavebackend.DTOs.RegisterRequestDTO;
+import com.example.yousavebackend.DTOs.User.UserBasicInfoDTO;
 import com.example.yousavebackend.DTOs.User.UserRequestDTO;
 import com.example.yousavebackend.DTOs.User.UserResponseDTO;
 import com.example.yousavebackend.entities.Role;
@@ -21,4 +22,6 @@ public interface IUserService {
     void deleteUser(Long id);
     long countAllUsers();
     Optional<User> findByEmail(String email);
+    List<UserBasicInfoDTO> getAllUsersBasicInfo();
+
 }

@@ -1,6 +1,7 @@
 package com.example.yousavebackend.services.implementations;
 
 import com.example.yousavebackend.DTOs.RegisterRequestDTO;
+import com.example.yousavebackend.DTOs.User.UserBasicInfoDTO;
 import com.example.yousavebackend.DTOs.User.UserRequestDTO;
 import com.example.yousavebackend.DTOs.User.UserResponseDTO;
 import com.example.yousavebackend.entities.*;
@@ -173,6 +174,17 @@ public class UserServiceImpl implements IUserService {
         return userRepository.findByEmail(email);
     }
 
+    @Override
+    public List<UserBasicInfoDTO> getAllUsersBasicInfo() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserBasicInfoDTO(
+                        user.getFirstname() + " " + user.getLastname(),
+                        user.getBloodType().getType(),
+                        user.getCity().getName(),
+                        user.getPhone()
+                ))
+                .collect(Collectors.toList());
+    }
     private UserResponseDTO mapToDTO(User user) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
         userResponseDTO.setId(user.getId());
