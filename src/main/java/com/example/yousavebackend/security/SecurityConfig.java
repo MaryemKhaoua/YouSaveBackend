@@ -50,6 +50,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/blood-types/**").hasAuthority("ADMIN")
 
 
+                        .requestMatchers("api/users/{id}").authenticated()
+
+
                                 .requestMatchers("/api/posts/all").permitAll()
                                 .requestMatchers("/api/posts/**").authenticated()
 
@@ -57,6 +60,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/comments/**").authenticated()
 
                                 .requestMatchers("api/users/basic-info").permitAll()
+                        .requestMatchers("api/users/roles-info").hasAuthority("ADMIN")
+                        .requestMatchers("/api/roles/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->

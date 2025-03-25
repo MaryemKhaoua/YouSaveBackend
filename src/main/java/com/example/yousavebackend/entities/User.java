@@ -26,7 +26,6 @@ public class User {
     private String password;
     private String phone;
     private LocalDate dateOfBirth;
-    private boolean eligible;
 
     @ManyToOne
     @JoinColumn(name = "city_id")
