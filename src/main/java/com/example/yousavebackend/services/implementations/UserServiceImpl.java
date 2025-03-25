@@ -1,9 +1,7 @@
 package com.example.yousavebackend.services.implementations;
 
 import com.example.yousavebackend.DTOs.RegisterRequestDTO;
-import com.example.yousavebackend.DTOs.User.UserBasicInfoDTO;
-import com.example.yousavebackend.DTOs.User.UserRequestDTO;
-import com.example.yousavebackend.DTOs.User.UserResponseDTO;
+import com.example.yousavebackend.DTOs.User.*;
 import com.example.yousavebackend.entities.*;
 import com.example.yousavebackend.repositories.*;
 import com.example.yousavebackend.services.IUserService;
@@ -128,7 +126,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) throws Exception {
+    public UserResponseDTO updateUser(Long id, UserProfilDTO userRequestDTO) throws Exception {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new Exception("User not found with id " + id));
 
@@ -136,7 +134,6 @@ public class UserServiceImpl implements IUserService {
         user.setLastname(userRequestDTO.getLastname());
         user.setGender(userRequestDTO.getGender());
         user.setEmail(userRequestDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         user.setPhone(userRequestDTO.getPhone());
         user.setDateOfBirth(userRequestDTO.getDateOfBirth());
 
@@ -147,14 +144,6 @@ public class UserServiceImpl implements IUserService {
         BloodType bloodType = bloodTypeRepository.findById(userRequestDTO.getBloodTypeId())
                 .orElseThrow(() -> new Exception("BloodType not found with id " + userRequestDTO.getBloodTypeId()));
         user.setBloodType(bloodType);
-
-        Set<Role> roles = new HashSet<>();
-        for (String roleName : userRequestDTO.getRoles()) {
-            Role role = roleRepository.findByName(roleName)
-                    .orElseThrow(() -> new Exception("Role not found with name " + roleName));
-            roles.add(role);
-        }
-        user.setRoles(roles);
 
         User updatedUser = userRepository.save(user);
         return mapToDTO(updatedUser);
@@ -185,6 +174,50 @@ public class UserServiceImpl implements IUserService {
                 ))
                 .collect(Collectors.toList());
     }
+
+
+    @Override
+    public List<UserBasicInforDTO> getAllUsersWithRoles() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserBasicInforDTO(
+                        user.getId(),
+                        user.getFirstname(),
+                        user.getLastname(),
+                        user.getRoles().stream().map(Role::getName).collect(Collectors.toSet())
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
+
+    @Override
+    public void changeUserRole(Long userId, UserRoleDto newRoleName) throws Exception {
+        // Log userId and newRoleName to check the inputs
+        System.out.println("Attempting to change role for userId: " + userId + " to role: " + newRoleName);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new Exception("User not found with id " + userId));
+
+        // Check if the role exists in the database
+        Role newRole = roleRepository.findByName(newRoleName.getNewRoleName())
+                .orElseThrow(() -> new Exception("Role not found with name " + newRoleName));
+
+        // Log the found role
+        System.out.println("Found role: " + newRole.getName());
+
+        // Clear current roles and add the new one
+        user.getRoles().clear();
+        user.getRoles().add(newRole);
+
+        // Save the updated user
+        userRepository.save(user);
+        System.out.println("User role updated successfully");
+    }
+
+
+
+
     private UserResponseDTO mapToDTO(User user) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
         userResponseDTO.setId(user.getId());

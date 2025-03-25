@@ -54,13 +54,14 @@ public class AuthController {
                         .map(Role::getName)
                         .orElseThrow(() -> new RuntimeException("User has no roles assigned"));
 
-                String token = jwtService.GenerateToken(authRequestDTO.getEmail(), role, user.getFirstname(), user.getLastname());
+                String token = jwtService.GenerateToken(authRequestDTO.getEmail(), role, user.getFirstname(), user.getLastname(),user.getId());
 
                 JwtResponseDTO jwtResponseDTO = JwtResponseDTO.builder()
                         .accessToken(token)
                         .role(role)
                         .firstname(user.getFirstname())
                         .lastname(user.getLastname())
+                        .userId(user.getId())
                         .build();
 
                 return ResponseEntity.ok(jwtResponseDTO);
