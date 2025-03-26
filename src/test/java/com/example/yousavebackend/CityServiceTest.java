@@ -33,10 +33,10 @@ class CityServiceTest {
     void setUp() {
         city = new City();
         city.setId(1L);
-        city.setName("Paris");
+        city.setName("mzinda");
 
         cityRequestDTO = new CityRequestDTO();
-        cityRequestDTO.setName("Paris");
+        cityRequestDTO.setName("mzinda");
     }
 
     @Test
@@ -46,7 +46,7 @@ class CityServiceTest {
         var result = cityService.getAllCities();
 
         assertEquals(1, result.size());
-        assertEquals("Paris", result.get(0).getName());
+        assertEquals("mzinda", result.get(0).getName());
         verify(cityRepository, times(1)).findAll();
     }
 
@@ -57,7 +57,7 @@ class CityServiceTest {
         Optional<CityResponseDTO> result = cityService.getCityById(1L);
 
         assertTrue(result.isPresent());
-        assertEquals("Paris", result.get().getName());
+        assertEquals("mzinda", result.get().getName());
         verify(cityRepository, times(1)).findById(1L);
     }
 
@@ -73,18 +73,18 @@ class CityServiceTest {
 
     @Test
     void saveCity_ShouldSaveCitySuccessfully() {
-        when(cityRepository.findByName("Paris")).thenReturn(Optional.empty());
+        when(cityRepository.findByName("mzinda")).thenReturn(Optional.empty());
         when(cityRepository.save(any(City.class))).thenReturn(city);
 
         CityResponseDTO result = cityService.saveCity(cityRequestDTO);
 
-        assertEquals("Paris", result.getName());
+        assertEquals("mzinda", result.getName());
         verify(cityRepository, times(1)).save(any(City.class));
     }
 
     @Test
     void saveCity_ShouldThrowException_WhenCityAlreadyExists() {
-        when(cityRepository.findByName("Paris")).thenReturn(Optional.of(city));
+        when(cityRepository.findByName("mzinda")).thenReturn(Optional.of(city));
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
             cityService.saveCity(cityRequestDTO);
@@ -100,7 +100,7 @@ class CityServiceTest {
 
         CityResponseDTO result = cityService.updateCity(1L, cityRequestDTO);
 
-        assertEquals("Paris", result.getName());
+        assertEquals("mzinda", result.getName());
         verify(cityRepository, times(1)).save(any(City.class));
     }
 
