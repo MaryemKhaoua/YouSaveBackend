@@ -30,10 +30,10 @@ public class PostServiceImpl implements IPostService {
     @Override
     public List<PostResponseDTO> getAllPosts() {
         return postRepository.findAll().stream()
+                .sorted((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt()))
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
-
     @Override
     public Optional<PostResponseDTO> getPostById(Long id) {
         return postRepository.findById(id)
@@ -96,6 +96,7 @@ public class PostServiceImpl implements IPostService {
         User user = post.getUser();
         String fullName = user.getFirstname() + " " + user.getLastname();
         dto.setCreatedBy(fullName);
+        dto.setCreatedAt(post.getCreatedAt());
         return dto;
     }
 }
