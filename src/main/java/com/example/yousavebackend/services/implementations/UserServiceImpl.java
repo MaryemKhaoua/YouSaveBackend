@@ -193,24 +193,19 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void changeUserRole(Long userId, UserRoleDto newRoleName) throws Exception {
-        // Log userId and newRoleName to check the inputs
         System.out.println("Attempting to change role for userId: " + userId + " to role: " + newRoleName);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception("User not found with id " + userId));
 
-        // Check if the role exists in the database
         Role newRole = roleRepository.findByName(newRoleName.getNewRoleName())
                 .orElseThrow(() -> new Exception("Role not found with name " + newRoleName));
 
-        // Log the found role
         System.out.println("Found role: " + newRole.getName());
 
-        // Clear current roles and add the new one
         user.getRoles().clear();
         user.getRoles().add(newRole);
 
-        // Save the updated user
         userRepository.save(user);
         System.out.println("User role updated successfully");
     }
