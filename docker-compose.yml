@@ -6,7 +6,7 @@ services:
     container_name: yousave-app
     ports:
       - "8080:8080"
-    depends_on:
+    depends_on:                   #démarre db avant app
       - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5437/youSave
