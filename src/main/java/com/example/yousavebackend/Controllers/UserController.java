@@ -55,7 +55,7 @@ public class UserController {
             UserResponseDTO updatedUser = userService.updateUser(id, userRequestDTO);
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
-            e.printStackTrace();  // Log the error
+            e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }

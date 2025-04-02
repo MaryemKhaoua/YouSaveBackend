@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/users/basic-info").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
 
                         .requestMatchers("/api/cities/all").permitAll()
@@ -50,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/blood-types/**").hasAuthority("ADMIN")
 
 
-                        .requestMatchers("api/users/{id}").authenticated()
+                        .requestMatchers("/api/users/{id}").authenticated()
 
 
                                 .requestMatchers("/api/posts/all").permitAll()
@@ -59,8 +60,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/comments/all").permitAll()
                                 .requestMatchers("/api/comments/**").authenticated()
 
-                                .requestMatchers("api/users/basic-info").permitAll()
-                        .requestMatchers("api/users/roles-info").hasAuthority("ADMIN")
+
+                        .requestMatchers("/api/users/roles-info").hasAuthority("ADMIN")
                         .requestMatchers("/api/roles/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
